@@ -22,7 +22,7 @@ public class SecurityConfig {
         http
             .csrf().disable()
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**").permitAll()   // signup/login open
+                .requestMatchers("/api/**").permitAll()   // signup/login open
                 .anyRequest().authenticated()              // rest secured
             )
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
