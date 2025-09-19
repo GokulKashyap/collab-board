@@ -1,4 +1,4 @@
-package com.example.trello_clone.config; 
+package com.example.trello_clone.config;
 
 import com.example.trello_clone.filters.JwtFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +8,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -22,8 +24,8 @@ public class SecurityConfig {
         http
             .csrf().disable()
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/**").permitAll()   // signup/login open
-                .anyRequest().authenticated()              // rest secured
+                .requestMatchers("/api/auth/**").permitAll()   // signup/login open
+                .anyRequest().authenticated()                 // everything else needs JWT
             )
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
@@ -36,5 +38,9 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
     }
-}
 
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+}
